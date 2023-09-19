@@ -11,3 +11,5 @@ Encoding: UTF-8
 LazyData: true
 URL: https://github.com/nilehatch/msb325byu
 BugReports: https://github.com/nilehatch/msb325byu/issues
+Suggests: 
+    learnr
