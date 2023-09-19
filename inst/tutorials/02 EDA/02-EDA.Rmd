@@ -17,6 +17,7 @@ knitr::opts_chunk$set(echo = FALSE)
 *Here's a simple exercise with an empty code chunk provided for entering the answer.*
 
 Write the R code required to add two plus two:
+![](images/niile_logo_for_eda.png){width="90%"}
 
 ```{r two-plus-two, exercise=TRUE}
 
@@ -27,6 +28,7 @@ Write the R code required to add two plus two:
 *Here's an exercise with some prepopulated code as well as `exercise.lines = 5` to provide a bit more initial room to work.*
 
 Now write a function that adds any two numbers and then call it:
+knitr::include_graphics("images/niile_logo_for_eda.png")
 
 ```{r add-function, exercise=TRUE, exercise.lines = 5}
 add <- function() {
