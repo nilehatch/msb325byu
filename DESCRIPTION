@@ -12,4 +12,6 @@ LazyData: true
 URL: https://github.com/nilehatch/msb325byu
 BugReports: https://github.com/nilehatch/msb325byu/issues
 Suggests: 
-    learnr
+    learnr,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
