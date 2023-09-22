@@ -1,0 +1,399 @@
+---
+title: "Data Wrangling"
+subtitle: "a module of transforming data"
+output: 
+   learnr::tutorial:
+     theme: "lumen" 
+runtime: shiny_prerendered
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+library(tidyverse)
+knitr::opts_chunk$set(echo = TRUE)
+
+(student_data <- tibble(
+  Student = c("Abbie", "Billy", "Clara", "Danielle", "Edgar"),
+  Math_Score = c(85, 92, 78, 95, 88),
+  Literature_Score = c(88, 90, 75, 92, 86)
+))
+```
+
+## A Brief History of R
+
+### The Birth of R:
+
+R's story is intimately tied to the history of the S programming
+language. In the early 1970s, John Chambers and his colleagues at Bell
+Laboratories developed S, a proprietary statistical programming
+language. S revolutionized data analysis by introducing a structured and
+powerful language for statistical computing. While S was groundbreaking,
+it was a proprietary software, limiting its accessibility and
+affordability. This led to the desire for an open-source alternative,
+which ultimately gave birth to R. Ross Ihaka and Robert Gentleman's work
+in the early 1990s, which resulted in R, was heavily influenced by S.
+Their goal was to develop a free, accessible alternative to the
+expensive statistical software packages available at the time.
+
+### Open-Source Roots:
+
+To accomplish the goal of free accessible software, R was developed
+under the GNU General Public License (GPL), ensuring it would remain
+open and accessible to everyone. R's open-source nature meant that
+anyone could contribute to its development and use it for various
+statistical and data analysis tasks. This openness quickly attracted a
+community of statisticians, data scientists, and researchers who saw its
+potential. Their collaborative approach led to rapid improvements, bug
+fixes, and the creation of numerous packages that extended R's
+capabilities.
+
+### Legacy of S in R:
+
+Despite the transition to R, S's legacy lives on within R. Many
+concepts, functions, and syntax from S were integrated into R, making it
+familiar to those who had experience with S. This ensured a relatively
+smooth transition for statisticians and data analysts. As R gained
+popularity and traction within the statistical and data science
+communities, it had a notable impact on S. The success of R contributed
+to the decline of S as a dominant statistical platform. It became clear
+that open-source and community-driven development was the way forward in
+the field of statistical computing.
+
+### Evolution and Packages:
+
+As R gained popularity, an ecosystem of user-contributed packages began
+to flourish. These packages added specific functions and capabilities to
+R, making it even more versatile. The Comprehensive R Archive Network
+(CRAN) became the central repository for these packages, ensuring easy
+access for users.
+
+### R's Contribution to Data Science:
+
+In the early 2000s, as the field of data science started to emerge, R
+gained prominence due to its robust statistical capabilities and data
+visualization tools. It became an essential tool for data analysts and
+scientists for tasks like data exploration, statistical modeling, and
+visualization.
+
+### R's Impact on Academia and Industry:
+
+R's open-source and community-driven nature led to its widespread
+adoption in both academia and industry. It became a standard tool for
+researchers and data professionals in fields such as economics, biology,
+social sciences, finance, and more.
+
+### Integration with Big Data and Machine Learning:
+
+As the data landscape evolved, R adapted. It integrated with big data
+technologies like Hadoop and Spark, allowing users to analyze massive
+datasets. R also developed machine learning libraries such as caret and
+xgboost, further solidifying its role in data science.
+
+### R Today:
+
+Today, R remains a powerful and popular tool for data analysis and
+statistics. It has a large and active user community, a vast library of
+packages, and is widely taught in college courses and data science
+programs.
+
+### Why Learn R:
+
+As college students, learning R can provide you with a solid foundation
+in statistical analysis and data manipulation. It's a valuable skill for
+future careers in data science, analytics, research, and various other
+fields.
+
+In summary, R started as a grassroots effort to democratize statistical
+analysis, evolved into a versatile data analysis tool, and continues to
+play a pivotal role in data science today. Embracing R as you embark on
+your journey into data analysis and statistics can open doors to a world
+of analytical possibilities.
+
+## Data Wrangling
+
+Data wrangling is a crucial step in the data analysis process. It
+involves transforming, cleaning, and reshaping raw data into a format
+that is more suitable for analysis and visualization. Data wrangling
+ensures that your data is in the right shape and structure to extract
+meaningful insights effectively.
+
+In this tutorial, we will explore data wrangling using Tidyverse, a
+collection of R packages designed for data science that includes popular
+packages like `dplyr`, `tidyr`, and `ggplot2`. Tidyverse provides a
+powerful and consistent set of tools for data manipulation and
+visualization, making it a favorite among data analysts and scientists.
+
+The data wrangling process spans several steps of the data science
+process, including consists of the following steps:
+
+-   **Import Data:** Importing data from various sources, such as files
+    (CSV, Excel), databases, APIs, or web scraping.
+-   **Data Cleaning:** Addressing missing or erroneous data, handling
+    duplicates, and converting data types to ensure consistency.
+-   **Data Transformation:** Reorganizing and restructuring data,
+    including tasks like filtering rows, selecting columns, creating new
+    variables, and reshaping data when needed.
+
+Throughout this tutorial, we will dive into each of these steps and
+demonstrate how Tidyverse's tools can simplify and streamline the data
+wrangling process, ultimately helping you derive valuable insights from
+your data.
+
+Are you ready to get started with data wrangling? Let's begin!
+
+## The Flavors of R
+
+Welcome to this tutorial on base R and data frames! R has evolved and
+improved rapidly over the years. R functions and coding from the early
+days (90s) is known as base R. Even though we will be embracing the
+tidyverse philosophy of R, bits of base R code shows up regularly in
+examples, videos, and code generated by AI. Here is a brief introduction
+to base R and how it compares to tidyverse so you know it when you see
+it.
+
+R offers several flavors or dialects that cater to different
+preferences. The main flavors include "base R," the "Tidyverse," and
+"data.table." Base R is the default flavor when you first open R and has
+a long-standing history. In contrast, the Tidyverse and data.table are
+extensions accessed through packages. Each flavor has its strengths and
+applications, and your choice often depends on the task at hand and
+personal preferences.
+
+### Comparing Flavors
+
+Some users have strong preferences for one flavor over another. However,
+each flavor has its own merits. The choice between them depends on the
+problem you're solving and your personal style.
+
+-   Tidyverse emphasizes readability and flexibility, making it an
+    excellent choice for scalable and easily comprehensible code,
+    particularly when collaborating with others. It emphasizes efficient
+    data cleaning and manipulation capabilities with concise and
+    practical code.
+
+-   data.table excels in speed and conciseness, allowing for rapid
+    development and efficient code execution, even with sizable
+    datasets.
+
+-   Base R is known for its stability, making it a suitable choice for
+    long-term projects. Additionally, it offers skills that are more
+    transferable to other programming languages.
+
+## Base R
+
+Here is a quick look at the syntax of base R:
+
+### R as a Calculator
+
+R can be used as a simple calculator. You can perform basic arithmetic
+operations such as addition, subtraction, multiplication, and division.
+
+```{r}
+# Example:
+2 + 3
+```
+
+Variables In R, you can store values in variables. This allows you to
+reuse and manipulate these values later.
+
+```{r}
+# Example:
+x <- 5
+y <- 3
+x + y
+```
+
+### Data Frames
+
+A data frame is a fundamental data structure in base R. It is a
+two-dimensional tabular data structure with rows and columns, much like
+a spreadsheet.
+
+```{r}
+# Example:
+df <- data.frame(
+  Name = c("Alice", "Bob", "Charlie"),
+  Age = c(25, 30, 22),
+  Score = c(85, 92, 78)
+)
+df
+```
+
+### Accessing Columns
+
+You can access individual columns of a data frame using the `$` operator
+or square brackets `[]`.
+
+```{r}
+# Example:
+# Accessing the 'Name' column using the '$' operator
+df$Name
+
+# Accessing the 'Age' column using square brackets
+df["Age"]
+```
+
+### Accessing Rows
+
+You can access specific rows using indexing.
+
+```{r}
+# Example:
+# Access the first row
+df[1, ]
+
+# Access the second row
+df[2, ]
+
+# Access rows 2 to 3
+df[2:3, ]
+```
+
+### Conclusion
+
+Congratulations! You've learned the basics of base R, data frames, and
+how to access columns and rows within them. These skills are essential
+for data analysis and manipulation in R. Keep practicing and exploring
+to become more proficient in R programming.
+
+## Tidyverse
+
+Tidyverse, a powerful collection of R packages for data manipulation and
+visualization. In this tutorial, you'll learn the basics of working with
+Tidyverse, including tibbles (a modern data frame), how to view data,
+summarize information, access columns, and access rows. Let's dive in!
+
+### Tibbles
+
+In this section, we will explore tibbles, a modern data frame structure
+in the tidyverse. Tibbles are a more user-friendly and feature-rich
+alternative to the traditional data frames in R.
+
+Tibbles are a type of data frame provided by the Tidyverse. They are
+similar to traditional data frames in R but offer some advantages:
+
+-   Tibbles display data more neatly and consistently.
+-   Column names are always treated as text.
+-   Tibbles do not convert strings to factors by default.
+
+Let's go over the key characteristics of tibbles:
+
+1.  **Column Names**: Tibbles preserve column names as they are, without
+    any modifications or coercion. This can be essential for maintaining
+    consistency in your data.
+2.  **Data Type Consistency**: Tibbles are stricter about preserving
+    data types. Unlike data frames, tibbles won't automatically convert
+    your variables to factors or character vectors.
+3.  **Printing**: When you print a tibble to the console, it only
+    displays the first few rows and columns, making it easier to explore
+    large datasets.
+4.  **Subsetting**: Tibbles use `[[` for subsetting columns, which can
+    be more intuitive and less prone to errors.
+5.  **Row Names**: Tibbles do not have row names. Instead, they use a
+    row number as a default identifier.
+
+#### Creating Tibbles
+
+You can create a tibble from an existing data frame or by directly
+specifying its columns. Let's see how to create a tibble:
+
+```{r}
+# Creating a tibble from a data frame
+library(tibble)
+df <- data.frame(ID = 1:3, Name = c("Alice", "Bob", "Charlie"))
+tb <- as_tibble(df)
+
+# Creating a tibble from scratch
+my_tibble <- tibble(
+  ID = c(101, 102, 103),
+  Age = c(25, 30, 22),
+  City = c("New York", "Los Angeles", "Chicago")
+)
+my_tibble
+```
+
+### Viewing Data
+
+Now that we have created some tibbles, let's explore their properties
+and learn how to work with them.
+
+##### Viewing the First Few Rows
+
+You can use the `head()` function to view the first few rows of a
+tibble:
+
+```{r}
+# View the first 5 rows of my_tibble
+head(my_tibble)
+```
+
+#### Viewing the Last Few Rows
+
+Similarly, you can view the last few rows using the `tail()` function:
+
+```{r}
+# Example:
+tail(my_tibble)
+```
+
+### Summary Information
+
+#### Summary of the tibble
+
+To get a summary of your tibble's structure, you can use `str()` or
+`glimpse()`:
+
+```{r}
+# Display summary information
+str(my_tibble)
+glimpse(my_tibble)
+```
+
+#### Summary of data in a tibble
+
+To get summary statistics for numerical columns, you can use the
+`summary()` function:
+
+```{r}
+# Example:
+summary(my_tibble$Age)
+```
+
+For categorical columns, you can use the `table()` function to see the
+frequency of each category:
+
+```{r}
+# Example:
+table(my_tibble$City)
+```
+
+### Accessing Columns
+
+Accessing columns in a tibble is straightforward using the `$` operator:
+
+```{r}
+# Access the 'Age' column
+my_tibble$Age
+```
+
+### Accessing Rows
+
+Accessing data in particular rows can be done using the `filter()`
+function (more on this later):
+
+```{r}
+# Filter rows where Age is greater than 25
+my_tibble %>%
+  filter(Age > 25)
+```
+
+Congratulations! You've learned the basics of working with Tidyverse in
+R. Tibbles provide a clean and modern way to work with data, and you've
+discovered how to view and summarize data, access columns, and access
+rows. These skills are fundamental for data analysis and manipulation in
+R, and you're on your way to becoming proficient with the Tidyverse. In
+the tutorials that follow, we will dive deeper into data manipulation
+using tibbles and other tidyverse tools.

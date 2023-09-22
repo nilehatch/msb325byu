@@ -1,0 +1,727 @@
+---
+title: "Mastering Workflow in R"
+output: 
+   learnr::tutorial:
+     theme: "lumen" 
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+library(tidyverse)
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+## Mastering R Workflow
+
+Welcome to the "Mastering R Workflow" tutorial! In this comprehensive tutorial, you will learn essential practices and strategies to streamline your R coding workflow and become a more efficient and organized R programmer.
+
+Whether you are new to R or a seasoned data scientist, having a well-defined workflow is crucial for several reasons:
+
+1. **Productivity:** A structured workflow reduces the time and effort required to complete tasks, enabling you to work more productively.
+
+2. **Clarity:** It enhances the clarity of your code, making it easier to understand, maintain, and collaborate with others.
+
+3. **Consistency:** A consistent workflow helps you follow best practices and maintain code quality.
+
+Throughout this tutorial, we will explore key aspects of a successful R workflow, including:
+
+- **Working with Objects:** Learn how to define, manipulate, and manage objects in R. Understand the importance of objects as stored values and not just printed outputs.
+
+- **Comments:** Discover the purpose of comments in your code and when to use them effectively. Shift your focus from explaining "how" your code works to describing "why" it's necessary.
+
+- **Naming:** Explore naming conventions and the significance of choosing meaningful and consistent names for objects and functions. Learn to strike a balance between brevity and clarity.
+
+- **Calling Functions:** Understand the fundamental concept of functions in R. Gain insights into the intuitive definition of functions and how they are analogous to Excel formulas.
+
+- **Code Style:** Embrace code style guidelines, including the Tidyverse Style Guide. Follow rules for file names, spacing, indentation, and line breaks to create clean and readable code.
+
+- **Spaces and Indentation:** Delve deeper into code clarity by mastering the use of spaces, indentation, and line breaks to make your code more visually appealing and comprehensible.
+
+- **Pipes (`|>` or `%>%`):** Learn how to use pipes for function chaining, allowing you to create a linear flow of data manipulation steps. Understand why pipes are indispensable in the tidyverse.
+
+- **Sectioning:** Discover the importance of sectioning your code using comments. Organize your scripts into manageable sections for improved readability and navigation.
+
+By the end of this tutorial, you'll have the tools and knowledge to develop a structured and efficient R coding workflow, enabling you to tackle data analysis, visualization, and programming tasks with confidence. Let's begin the journey toward mastering your R workflow!
+
+## Working with Objects {data-progressive=TRUE}
+
+In R, objects are fundamental building blocks used to store data and results of computations. In this section, we'll explore how to define objects, understand that they store values, create vectors by combining objects, and print the value of an object to the console.
+
+### Defining objects {data-allow-skip=TRUE}
+
+To define an object in R, you can use the assignment operator `<-` or `=`. Here's an example:
+
+```{r define_x_42, echo=T}
+# Define an object named 'x' with the value 42
+x <- 42
+```
+
+#### Exercise: Defining objects 
+
+__Objective:__ Practice defining objects in R.  For each of the following, use Chatgpt to generate code that will 
+
+- Use chatgpt to define an object named `my_name` and assign it your first name as a character string and print it to the console by calling the object: `my_name`.
+- Define an object named `my_birth_year` and assign it your four digit birth year as a numeric value and print it to the console.
+- Define an object named `favorite_fruit` and assign it your favorite fruit as a character string and print it to the console.
+
+Print each of these objects to the console.
+```{r define_object, exercise=TRUE, exercise.eval=TRUE}
+
+```
+
+```{r define_object-hint}
+my_name <- "your name"
+my_name
+
+my_birth_year <- your_birth_year
+my_birth_year
+
+favorite_fruit <- "your favorite fruit"
+favorite_fruit
+```
+
+
+
+
+### Objects store values {data-allow-skip=TRUE}
+Objects can store various types of data, such as numbers, text, functions, lists or even entire datasets.  Basically, everything in R is an object that you can store, transform, and utilize.  It's important to understand that an object is not just a printed output. It stores a value that you can use in your calculations or analysis.
+
+```{r store_x_squared, echo = T}
+# Calculate the square of 'x' and store it in 'x_squared'
+x_squared <- x^2
+
+# Print 'x_squared'
+x_squared
+```
+Now 'x_squared' holds the squared value of 'x', which is 42 x 42 = 1764.
+
+#### Exercise: Storing objects {data-allow-skip=TRUE}
+__Objective:__ Test your understanding of how objects store values.  
+
+- Use chatgpt to provide code to create an object of your age and name it `my_age` and then calculate the sum of your age (`my_age`) and the number 10. Store the result in an object named `sum_age` and print it to the console.
+- Use chatgpt to provide code to create an object your favorite car model and name it `favorite_car` then calculate the length of your favorite car model's name (`favorite_car`). Store the result in an object named `car_length` and print it to the console.
+
+```{r understand_object, exercise=TRUE, exercise.setup = "define_object"}
+
+```
+
+```{r understand_object-hint}
+my_age <- your_age
+sum_age <- my_age + 10
+sum_age
+
+favorite_car <- "your_favorite_car_model"
+car_length <- nchar(favorite_car)
+car_length
+
+```
+
+
+
+
+
+
+### Combining Objects {data-allow-skip=TRUE}
+You can combine multiple objects to create a vector using the `c()` function. Vectors are essential data structures in R.
+```{r combine_objects, echo = T}
+# Define two objects
+a <- 1
+b <- 2
+
+# Combine 'a' and 'b' into a vector 'my_vector'
+my_vector <- c(a, b)
+
+# Print 'my_vector'
+my_vector
+```
+The vector 'my_vector' contains the values 1 and 2.
+
+#### Exercise: Combining Objects into Vectors
+__Objective:__ Practice creating vectors by combining objects.
+
+- Use chatgpt to define three objects: `day1`, `day2`, and `day3`, representing the number of steps you walked on the first three days of the week (as numeric values).
+- Combine these objects into a vector named `three_day_steps` using the `c()` function.
+- Print the `three_day_steps` vector to the console.
+
+```{r combine_object, exercise=TRUE, exercise.eval=TRUE}
+
+```
+
+```{r combine_object-hint}
+day1 <- your Monday step count
+day2 <- your Tuesday step count
+day3 <- your Wednesday step count
+
+three_day_steps <- c("day1", "day2", "day3")
+three_day_steps
+```
+
+
+
+
+### Printing Objects {data-allow-skip=TRUE}
+
+To print the value of an object to the console, you can simply type the object's name:
+```{r print_x_squared, echo = T}
+# Print the value of 'x_squared'
+x_squared
+```
+Alternatively, you can wrap the object creation code in parentheses to automatically print the value:
+```{r wrap_in_parentheses, echo = T}
+# Automatically print the value of 'x_squared' by wrapping it in parentheses
+(x_squared <- x^2)
+```
+As you can see, this will display the value of 'x_squared' in the console.
+
+#### Exercise: Printing Objects
+__Objective:__ Practice printing object values to the console.
+
+- Define an object named `favorite_color` and assign it your favorite color as a character string. Call the object to print the value of `favorite_color` to the console.
+- Calculate the length of `favorite_color` and store it in an object named `color_length`.  Use parentheses to print the value of `color_length` to the console.
+
+```{r print_object, exercise=TRUE, exercise.eval=TRUE}
+
+```
+
+```{r print_object-hint}
+favorite_color <- "your favorite color"
+favorite color
+
+(color_length <- nchar(favorite_color))
+```
+
+
+
+
+
+## Comments
+
+Comments are essential for documenting your R code. They allow you to add explanations and context to your code, making it more understandable for both yourself and others. In this section, we'll explore how to use comments effectively in R.
+
+### What Are Comments?
+
+Comments in R are lines of text that are not executed as code. They serve as notes or annotations within your script to provide explanations, context, or reminders. Comments are ignored by the R interpreter.
+
+```{r}
+# This is a comment in R
+```
+
+### When to Use Comments
+
+Comments serve as a valuable narrative within code, reflecting the journey of a data scientist's proficiency. Initially, when grappling with R, I leaned on comments to unravel the intricacies of code—explaining the "how" behind each line and documenting the process that led to a solution. As my mastery of R deepened, I found myself transitioning from documenting the mechanics of the code to articulating the "why." Instead of focusing solely on unraveling the logic behind the code, I began to emphasize its purpose and the underlying rationale.
+
+The arrival of tidyverse, with its commitment to producing highly-readable code, reinforced my evolution of the use of comments. Prior to tidyverse, my code was very dense, optimized for brevity, and challenging to decipher after I had left it for a while. It excelled in efficiency in writing but posed a substantial hurdle for future comprehension. During this phase, my comments naturally gravitated towards explaining "how" the code functioned. Tidyverse, on the other hand, fosters a more expressive and legible coding style. With its cleaner syntax, the emphasis on readability minimized the need for extensive comments explaining "how." Instead, I could concentrate on articulating the "why" behind each code block. 
+
+ChatGPT, as you've already experienced, excels in crafting code that is correct, comprehensible, and easily adaptable. When prompted for tidyverse code, ChatGPT generates code that is not only functional but also intelligible. Remarkably, it even has the capacity to self-correct when provided with error feedback through prompts. Nevertheless, ChatGPT's proficiency in explaining its code choices does not eliminate our responsibility to elucidate the rationale behind our choice of prompts. While ChatGPT can clarify "how" it arrived at a specific code snippet, it remains reliant on our guidance when it comes to "why" we selected a particular prompt. Therefore, it is prudent to incorporate comments that shed light on the architectural decisions within our code—tracing the path from one prompt to the next with deliberate purpose.
+
+ For instance, consider the case of adjusting the `span` argument in `geom_smooth()`. Changing this value from its default of 0.75 to 0.9 is easy for a future reader to understand, but unless you note your thinking in a comment, no one will understand why you changed the default. Comments serve as a time capsule of your thought process.
+```{r echo=T}
+ 
+# Create some sample data
+set.seed(42)
+data <- data.frame(
+  x = rnorm(100),
+  y = rnorm(100)
+)
+
+# Changed span argument from 0.75 (default) to 0.9 to create a scatter plot with a smoothed line
+ggplot(data, aes(x, y)) +
+  geom_point() +  # Scatter plot points
+  geom_smooth(span = 0.90, method = "loess", color = "blue") +
+  labs(
+    title = "Scatter Plot with Smoothed Line",
+    x = "X-axis",
+    y = "Y-axis"
+  )
+
+```
+
+
+#### Describing Intent
+Comments are most valuable when they describe the intent of the code rather than explaining how a line of code works. They should answer questions like "What is this code supposed to do?" and "Why was this approach chosen?"
+
+For example, consider this code that calculates the average of a vector:
+
+```{r}
+# Calculate the average of 'scores'
+scores <- c(77, 88, 99)
+average_score <- mean(scores)
+```
+
+#### Adding Context
+Comments are also useful for adding context to your code. You can use comments to clarify the purpose of variables, functions, or sections of code.
+
+```{r}
+# Define variables for the X and Y coordinates
+x_coord <- 5
+y_coord <- 10
+```
+
+#### Comment Best Practices
+
+__Be Concise__
+Keep comments concise and to the point. Avoid overly long or redundant comments.
+
+__Use Proper Grammar__
+Write comments using proper grammar and punctuation. Clear and well-structured comments are easier to understand.
+
+__Update Comments__
+Remember to update comments when you modify the code. Outdated comments can be misleading.
+
+__Avoid Over-Commenting__
+While comments are essential, avoid over-commenting every line of code. Focus on explaining the most critical parts.
+
+
+Now, let's practice adding comments to code to describe intent and provide context.  These exercises will help you practice using comments effectively to make your code more understandable and maintainable:
+
+### Exercise: Describing Intent
+
+Write a comment above the code that calculates the square of a number to describe its intent.
+
+```{r comment_city_pop, exercise=TRUE, exercise.eval=TRUE}
+
+```
+
+```{r comment_city_pop-hint}
+
+(x <-  42)
+
+# calculate the square of x
+(x_squared <- x^2)
+```
+
+
+### Exercise: Adding Context
+Write a comment to provide context for a variable that stores the student population of a university
+
+```{r comment_pop, exercise=TRUE, exercise.eval=TRUE}
+
+```
+
+```{r comment_pop-hint}
+
+# population of BYU in Fall 2022
+pop <- 34390 
+
+```
+
+In this section, we've explored the importance of comments in R code. Comments serve as documentation and help you and others understand the intent and context of your code. By following best practices for commenting, you can write cleaner and more accessible R scripts.
+
+
+
+
+
+
+## Naming 
+
+Naming variables, functions, and objects is a crucial aspect of writing clean and readable code in R. As Phil Karlton humorously quipped, "There are only two hard things in Computer Science: cache invalidation and naming things." In this section, we'll delve into the art and science of naming in the tidyverse, exploring various conventions and best practices.
+
+### The Personal Challenge of Naming
+
+Naming takes a surprising amount of thought and revision. Often, we're tempted to use abbreviations for brevity. For instance, in my code "Muscle Cola" might become "mc," a regression coefficient "bpcp," or the price that maximizes profit "PstarPi." However, such concise names may not be obvious to others, and we can even forget their meanings if we revisit the code after some time. While it's natural to prefer short names for efficiency, choosing more descriptive names is often the wiser choice.
+
+### Naming Conventions
+
+In the R community, various naming conventions are used. Let's explore some common ones:
+
+#### 1. snake_case
+
+   - Uses underscores to separate words.
+   - Example: `my_variable_name`
+
+#### 2. camelCase
+
+   - Begins each word with a capital letter (except the first word).
+   - Example: `myVariableName`
+
+#### 3. Periods
+
+   - Uses periods to separate words.
+   - Example: `my.variable.name`
+
+#### 4. The Improptu Approach
+
+   - Embraces a less conventional naming style.
+   - Example: `My.VariableName_NONconformist`
+
+While personal preference plays a role, the tidyverse style guide encourages the use of `snake_case`. Initially, some developers resist this convention due to the underscore character, which may slow down typing. However, with practice, typing underscores becomes more comfortable, and `snake_case` aligns well with tidyverse principles of clean and readable code.
+
+### R is case sensitive
+
+R is a language with precise rules, and deviations from these rules can result in errors. One critical rule to remember is that R is case-sensitive so be careful with your capitalization. For example, `I_use_snake_case` is not the same as `i_use_snake_case`---in R, they are entirely different objects.
+
+### Exercise: Naming 
+
+Now, let's practice choosing appropriate names for variables following the `snake_case` convention. This practice will help reinforce the tidyverse naming convention.
+
+1. Define a variable to represent the number of students in a class.
+1. Create a variable to store the average score of a test.
+1. Define a variable for the total profit of a company.
+```{r naming_exercise, exercise=TRUE, exercise.eval=TRUE}
+
+```
+
+```{r naming_exercise-hint}
+# the number of students in a class
+student_count <- 58
+
+# the average score of a test
+mean_test_score <- mean(scores)
+
+# total profit of company x
+profit_x <- profit
+
+```
+
+In the tidyverse and R in general, naming is more than just a matter of convenience—it's an essential part of writing code that is readable, maintainable, and collaborative. By following conventions like `snake_case` and being mindful of case sensitivity, you'll be better equipped to write code that is not only correct but also easy for others (and your future self) to understand.
+
+
+
+
+
+## Calling Functions
+
+In the world of R, functions are like powerful tools that help you perform specific tasks or operations. Imagine you're working with a giant spreadsheet, and you need to calculate the mean of a column of numbers. Instead of manually adding and dividing, you'd use a formula, right? Well, in R, we have something similar called functions, and they make your data manipulation tasks easier and more efficient.
+
+### What Are Functions?
+
+A function in R is much like what you already know from algebra or statistics. It's like a predefined set of instructions that takes input, performs a specific action on that input, and produces an output. Think of functions as Excel formulas. 
+
+For instance, when you use the Excel formula `=SUM(A1:A10)/10` to calculate the mean of numbers in cells A1 to A10, you're effectively creating a function without naming it. Here's what's happening:
+   - **Input**: The collection of numbers in cells A1 to A10.
+   - **Action**: Summing these numbers and then dividing by the count (10).
+
+In R, functions work in a similar way. Everything you've done in R so far has involved using functions. A function in R has a name (unlike an Excel formula you create on the spot), specifies what data or object it works on, and explains how the operation is performed on that object.
+
+### Anatomy of a Function
+
+Let's take the `ggplot` function as an example, a core tool in data visualization. When using `ggplot`, you go through a series of steps:
+   1. You **call** the function by name, `ggplot`.
+   2. You declare what data or dataset you're working with using the `data` argument.
+   3. You use a mapping to specify which variables represent the x and y axes through aesthetics.
+   4. You declare the geometry, which determines how the data should be represented.
+   5. You can add additional layers to customize the plot further.
+
+In this context:
+
+- The **function name** is "ggplot."
+- The **object being worked on** includes the dataset and the specifications of x and y variables.
+- The **action** is to create a plot of the specified data using the specified geometry.
+
+### Calling Functions in R
+
+We use the term "call" when we use a function in R. To call a function, you typically write the function's name, followed by parentheses containing arguments. Arguments are like the ingredients you provide to the function for it to work its magic. You specify arguments like this:
+
+`function_name(argument1 = value1, argument2 = value2, ...)`
+
+To illustrate calling functions in R, let's consider a common data analysis task—calculating the average of a set of numbers. In R, we achieve this using the `mean` function. Suppose we have a vector `my_numbers` containing numeric values:
+```{r}
+my_numbers <- c(5, 10, 15, 20, 25)
+```
+Now, we want to calculate the average of these numbers. We can call the mean function and provide our vector as the argument:
+
+```{r}
+average <- mean(my_numbers)
+```
+
+In this example:
+
+- __Function Name:__ mean
+- __Object Being Worked On:__ The vector `my_numbers`.
+- __Action:__ Calculating the average of the values in the vector.
+
+The result, stored in the average variable, is the mean of our numeric vector. This illustrates how functions in R are like ready-made tools that you can use to perform specific operations on your data.
+
+When working in RStudio, you can make your life easier by using tab completion. Start typing the name of a function, press the "Tab" key, and RStudio will attempt to auto-complete the function name for you. You can continue typing to disambiguate and complete the function call.
+
+Functions are essential tools in R, helping you perform a wide range of tasks efficiently. Understanding how to call functions and provide them with the right arguments is a fundamental skill for data analysis and programming in R. As you become more comfortable with functions, you'll find that they are your allies in tackling complex tasks with ease.
+
+#### Exercise: Calculate the Mean
+__Objective:__ Practice calling the mean function to calculate the average of a numeric vector.
+
+- Create a numeric vector named `test_scores` containing the following values: 85, 92, 78, 89, 95.
+- Use the mean function to calculate the average of the test_scores vector and store the result in a variable named `average_score`.
+- Print the `average_score` to the console.
+```{r mean_function, exercise=TRUE, exercise.eval=TRUE}
+
+```
+
+```{r mean_function-hint}
+# create test_scores
+test_scores <- c(85, 92, 78, 89, 95)
+
+# calculate the average score of a test
+average_score <- mean(test_scores)
+average_score
+```
+
+#### Exercise: Generate a Sequence
+__Objective:__ Practice calling the `seq` function to generate a sequence of numbers.
+
+- Use the `seq` function to create a sequence of numbers from 1 to 10 and store it in a variable named `sequence`.
+- Print the `sequence` to the console.
+
+```{r sequence, exercise=TRUE, exercise.eval=TRUE}
+
+```
+```{r sequence-hint}
+# create sequence
+(sequence <- seq(1:10))
+```
+
+#### Exercise 3: String Concatenation
+__Objective:__ Practice calling the `paste` function to concatenate strings.
+
+- Create two character vectors named `first_name` and `last_name` containing your first name and last name, respectively.
+- Use the `paste` function to concatenate your first and last names with a space in between and store the result in a variable named `full_name`.
+- Print the `full_name` to the console.
+
+```{r concatenate, exercise=TRUE, exercise.eval=TRUE}
+
+```
+```{r concatenate-hint}
+first_name <- "your_first_name"
+last_name <- "your_last_name"
+
+(full_name <- paste(first_name, last_name, sep = " "))
+```
+
+
+#### Exercise: Factorial Calculation
+__Objective:__ Practice calling the factorial function to calculate factorial values.
+
+- Define a variable `n` and assign it a positive integer value of your choice (don't go too big, factorials get really big really fast).
+- Use the `factorial` function to calculate the factorial of `n` and store the result in a variable named `factorial_result`.
+- Print the `factorial_result` to the console.
+
+```{r n_factorial, exercise=TRUE, exercise.eval=TRUE}
+
+```
+```{r n_factorial-hint}
+n <- 9
+(factorial_result <- factorial(n))
+```
+
+
+#### Exercise: Creating a Custom Function
+__Objective:__ Create and call your own custom function.
+
+- Create a custom function named `square` that takes one argument (`x`) and returns the square of x.
+- Use your `square` function to calculate the square of 7 and store the result in a variable named `squared_value`.
+- Print the `squared_value` to the console.
+
+```{r create_function, exercise=TRUE, exercise.eval=TRUE}
+
+```
+```{r create_function-hint}
+square <- function(x) {x^2}
+
+x <- 7
+square(x)
+```
+
+
+
+
+
+## Code Style 
+
+In the world of programming, writing code is not just about getting the desired output; it's also about making your code clear, consistent, and readable. Code style is like the grammar and punctuation of programming languages. Just as proper grammar makes a text more understandable, adhering to a coding style guide ensures that your code is easy to read and maintain.
+
+### The Tidyverse Style Guide
+
+The creators of the tidyverse, a powerful collection of R packages, have developed a comprehensive style guide. This style guide consists of conventions and rules that are widely accepted to help you write cleaner and more understandable R code.
+
+You can find the complete Tidyverse Style Guide [here](https://style.tidyverse.org/). This guide covers various aspects of coding style, from naming conventions to formatting, indentation, and documentation.
+
+### Styler: Formatting Your Code
+
+To help you follow the tidyverse style guide and maintain consistent code style, there's a tool called "styler." Styler automatically formats your code according to the style guide, or you can customize it to follow your own preferred style. This way, you can focus on the content of your code, and styler will take care of the formatting.
+
+Here's how you can use styler:
+
+1. In RStudio, go to the "Addins" menu.
+2. Select "Styler" and choose whether you want to style the active file, a specific region of code, or even an entire package.
+3. Click "OK," and styler will format your code according to the chosen style guide.
+
+### Following Style Guide Rules
+
+Let's explore a few rules from the Tidyverse Style Guide:
+
+#### Rule 1.a: Meaningful File Names
+
+File names should be meaningful and end with the extension `.R`. Avoid using special characters in file names and stick with numbers, letters, hyphens, and underscores.
+
+#### Rule 1.b: Orderly File Prefixes
+
+If your files should be run in a particular order, consider prefixing them with numbers. If you anticipate having more than ten files, left-pad with zeros for consistency. For example, `01_file`, `02_file`, ...
+
+#### Rule 2: Spacing, Indentation, and Line Breaks
+
+Maintain consistent spacing and indentation in your code to improve readability. Use spaces to separate elements, indent code blocks, and break long lines of code for clarity.
+
+#### Rule 3: Pipes for Data Manipulation (coming up next)
+
+In the next section, we'll delve into the use of pipes (`|>`) for efficient data manipulation, which is an integral part of tidyverse coding style.
+
+Following these rules and other guidelines in the style guide ensures that your code is not only functional but also aesthetically pleasing and easy to collaborate on with others.
+
+### Practice with Styler
+
+Now, let's practice using styler to format your code and adhere to the Tidyverse Style Guide. Open an R script, add some code, and use styler to format it based on the guidelines you've learned.
+
+Remember, consistent and well-formatted code is not just a matter of aesthetics—it's an essential part of writing code that's maintainable and easy for others to understand.
+
+#### Exercise: Meaningful File Names
+__Objective:__ Practice following the Tidyverse Style Guide's recommendation for meaningful file names.
+
+- Create a new R script and name it `my_data_analysis.R`.
+- Add comments explaining what the script does.
+- Save the script with a filename that aligns with the style guide's recommendation for meaningful names.
+
+#### Exercise: Custom Styling with Styler
+__Objective:__ Use the `styler` tool to apply custom styling to your code.
+
+- Recycle an R script from your earlier work with visualization and eda.
+- Apply the styler tool through the Addins menu to format the code according to your custom style preferences.
+- Compare the original and formatted versions of the code to observe the differences.
+
+
+In this section, you've learned about the significance of code style and explored the Tidyverse Style Guide. You've also seen how the tool styler can help you automatically format your code to adhere to these style guidelines. Consistently following coding style conventions, including spacing, indentation, and line breaks, is a crucial step toward becoming a more effective and collaborative R programmer.
+
+
+
+
+
+
+## Pipes
+
+Pipes, represented by `|>`, are a powerful tool in the world of R programming. They allow you to streamline and simplify your code by chaining together a series of operations. Pipes are a fundamental part of the tidyverse and are used extensively for data manipulation and analysis.  Note that `|>` as the representation for a pipe has only recently replaced the older representation `%>%`.  If you see old code or old instructions with `%>%`, just call it pipe and substitute the more current form `|>` if you want to.
+
+### What Are Pipes?
+
+At its core, a pipe (`|>`) is a way to pass the output of one function as the input to another function. Think of it as a conveyor belt for data—each step in your data processing pipeline takes the output of the previous step and transforms it further.
+
+In your mind, substitute the word "then" for the pipe.  In the following example, first the data, then apply function 1 to the data, then apply function 2 to the results of function 1, then apply function 3 to the results of function 2, etc. would be represented by `data %>% function1() %>% function2() %>% function3()` or `data |> function1() |> function2() |> function3()`.
+ 
+Pipes make your code more readable because they naturally follow the flow of data from one operation to the next. This readability is especially crucial when working with complex data manipulation tasks.
+
+#### Here's how the pipe operator works and why it's useful:
+
+- __Function Chaining:__ The pipe operator allows you to chain together a sequence of functions, where the output of one function becomes the input of the next function. This chaining makes it easier to read and write code in a linear, left-to-right fashion, similar to how you might describe a data transformation process in plain language.
+- __Avoiding Nested Functions:__ Without the pipe operator, you might need to nest functions, which can lead to code that is harder to read and understand. The pipe operator eliminates the need for nested functions, making your code more readable and less error-prone.
+- __Clarity__ By breaking down complex data manipulation tasks into a series of smaller, single-purpose functions, you can enhance the clarity of your code. Each step in the pipeline typically performs a specific operation, making it easier to understand what's happening.
+
+#### Here's the basic syntax of the pipe operator:
+
+`|>` should always have a space before it and should typically be the last thing on a line. This makes it easier to add new steps, rearrange existing steps, modify elements within a step, and get a 10,000 ft view by skimming the verbs on the left-hand side.  (Most functions are verbs which is a good style rule for your functions.)
+
+```{r echo=T}
+# Create a data frame
+data <- data.frame(
+  name = c("Alice", "Bob", "Charlie"),
+  age = c(25, 30, 22),
+  score = c(90, 85, 78)
+)
+
+# Filter, mutate, and arrange the data using pipes
+(result <- data %>%
+  filter(age >= 25) %>%
+  mutate(score = score + 5) %>%
+  arrange(desc(score))
+)
+```
+
+#### Practical Example
+Let's dive into a practical example to see how pipes work in action. Consider a scenario where you have a dataset of student exam scores, and you want to perform the following tasks:
+
+- Filter out students who scored below 70.
+- Calculate the average score for the remaining students.
+- Round the average score to two decimal places.
+
+Here's how you can accomplish this using pipes:
+
+```{r echo=T}
+(exam_scores <- tibble(score = c(85,72, 99, 51, 69, 75, 55, 68)))
+
+# Assume you have a dataset named 'exam_scores'
+(average <- exam_scores %>%
+  filter(score >= 70) %>%      # Step 1: Filter
+  summarise(avg_score = mean(score)) %>%  # Step 2: Calculate average
+  pull(avg_score) %>%          # Extract the average score
+  round(2)                     # Step 3: Round to two decimal places
+)
+
+```
+
+
+#### ggplot2 pipes 
+
+Note that in ggplot, the `+` is the pipe operator instead of `|>`.  It works the same way, though,
+
+```{r echo=T}
+# Create a simple data frame
+data <- data.frame(
+  x = c(1, 2, 3, 4, 5),
+  y = c(10, 8, 6, 4, 2)
+)
+
+# Start building the ggplot object step by step using the + operator
+(gg <- ggplot(data, aes(x, y)) +
+  geom_point() +  # Add a scatterplot layer
+  geom_line() +   # Add a line layer
+  labs(
+    title = "Scatterplot and Line Plot",
+    x = "X-Axis",
+    y = "Y-Axis"
+  ) +
+  theme_minimal()  # Apply a theme
+)
+```
+
+
+
+## Sectioning
+
+As your R scripts grow in complexity, it becomes essential to maintain clarity and organization. One effective way to achieve this is by using sectioning comments to break up your code into manageable pieces.
+
+### Why use code sectioning?
+
+Sectioning comments serve multiple purposes:
+
+1. **Clarity:** They make your code more readable by providing clear markers for different parts of your script.
+
+1. **Organization:** They help you maintain a logical structure in your script, making it easier to navigate and understand.
+
+1. **Navigation:** In RStudio, you can create these section headers using a keyboard shortcut (Cmd/Ctrl + Shift + R), and they will appear in the code navigation drop-down at the bottom-left of the editor. This allows for quick navigation to specific sections of your script.
+
+### How to create section headers
+
+Creating section headers is straightforward. You can use comments to label different sections of your script. Here's an example:
+
+```{r echo = T}
+# Load data --------------------------------------
+
+# Your code for loading data goes here
+
+# Plot data --------------------------------------
+
+# Your code for plotting data goes here
+```
+In this example, we have two sections labeled "Load data" and "Plot data," each followed by a series of comments or code related to that specific task.
+
+### RStudio Shortcut
+As mentioned earlier, RStudio provides a keyboard shortcut to create these headers. To create a section header:
+
+- Place your cursor where you want the section header.
+- Use the keyboard shortcut Cmd/Ctrl + Shift + R.
+- Enter the name of the section.
+
+This shortcut saves you time and ensures consistent section headers throughout your script.
+
+Now, let's practice sectioning your own R scripts. Open one of your longer scripts and add section headers to break it into logical parts. This practice will not only make your code more organized but also improve your coding experience.
+
+Remember, well-organized code is easier to maintain and collaborate on with others. Happy coding!
+

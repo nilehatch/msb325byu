@@ -1,0 +1,639 @@
+---
+title: "Data Wrangling"
+output: 
+   learnr::tutorial:
+     theme: "lumen" 
+runtime: shiny_prerendered
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+library(tidyverse)
+knitr::opts_chunk$set(echo = TRUE)
+
+(student_data <- tibble(
+  Student = c("Abbie", "Billy", "Clara", "Danielle", "Edgar"),
+  Math_Score = c(85, 92, 78, 95, 88),
+  Literature_Score = c(88, 90, 75, 92, 86)
+))
+```
+
+## Data Wrangling
+
+Data wrangling is a crucial step in the data analysis process. It
+involves transforming, cleaning, and reshaping raw data into a format
+that is more suitable for analysis and visualization. Data wrangling
+ensures that your data is in the right shape and structure to extract
+meaningful insights effectively.
+
+In this tutorial, we will explore data wrangling using Tidyverse, a
+collection of R packages designed for data science that includes popular
+packages like `dplyr`, `tidyr`, and `ggplot2`. Tidyverse provides a
+powerful and consistent set of tools for data manipulation and
+visualization, making it a favorite among data analysts and scientists.
+
+The data wrangling process spans several steps of the data science
+process, including consists of the following steps:
+
+-   **Import Data:** Importing data from various sources, such as files
+    (CSV, Excel), databases, APIs, or web scraping.
+-   **Data Cleaning:** Addressing missing or erroneous data, handling
+    duplicates, and converting data types to ensure consistency.
+-   **Data Transformation:** Reorganizing and restructuring data,
+    including tasks like filtering rows, selecting columns, creating new
+    variables, and reshaping data when needed.
+
+Throughout this tutorial, we will dive into each of these steps and
+demonstrate how Tidyverse's tools can simplify and streamline the data
+wrangling process, ultimately helping you derive valuable insights from
+your data.
+
+Are you ready to get started with data wrangling? Let's begin!
+
+## Tibbles
+
+In this section, we will explore tibbles, a modern data frame structure
+in the tidyverse. Tibbles are a more user-friendly and feature-rich
+alternative to the traditional data frames in R.
+
+### What is a Tibble?
+
+A tibble is a data frame, but with some important differences. Let's go
+over the key characteristics of tibbles:
+
+1.  **Column Names**: Tibbles preserve column names as they are, without
+    any modifications or coercion. This can be essential for maintaining
+    consistency in your data.
+2.  **Data Type Consistency**: Tibbles are stricter about preserving
+    data types. Unlike data frames, tibbles won't automatically convert
+    your variables to factors or character vectors.
+3.  **Printing**: When you print a tibble to the console, it only
+    displays the first few rows and columns, making it easier to explore
+    large datasets.
+4.  **Subsetting**: Tibbles use `[[` for subsetting columns, which can
+    be more intuitive and less prone to errors.
+5.  **Row Names**: Tibbles do not have row names. Instead, they use a
+    row number as a default identifier.
+
+### Creating Tibbles
+
+You can create a tibble from an existing data frame or by directly
+specifying its columns. Let's see how to create a tibble:
+
+```{r echo=T}
+# Creating a tibble from a data frame
+library(tibble)
+df <- data.frame(ID = 1:3, Name = c("Alice", "Bob", "Charlie"))
+tb <- as_tibble(df)
+
+# Creating a tibble from scratch
+my_tibble <- tibble(
+  ID = c(101, 102, 103),
+  Age = c(25, 30, 22),
+  City = c("New York", "Los Angeles", "Chicago")
+)
+```
+
+### Exploring Tibbles
+
+Now that we have created some tibbles, let's explore their properties
+and learn how to work with them.
+
+#### Viewing the First Few Rows
+
+You can use the `head()` function to view the first few rows of a
+tibble:
+
+```{r echo=T}
+# View the first 5 rows of my_tibble
+head(my_tibble)
+```
+
+#### Summary Information
+
+To get a summary of your tibble's structure, you can use `str()` or
+`glimpse()`:
+
+```{r echo =T}
+# Display summary information
+str(my_tibble)
+glimpse(my_tibble)
+```
+
+#### Accessing Columns
+
+Accessing columns in a tibble is straightforward using the `$` operator:
+
+```{r echo=T}
+# Access the 'Age' column
+my_tibble$Age
+```
+
+#### Accessing Rows
+
+Accessing data in particular rows can be done using the filter()
+function (more on this later):
+
+```{r echo=T}
+# Filter rows where Age is greater than 25
+my_tibble %>%
+  filter(Age > 25)
+```
+
+In this section, we introduced tibbles, a crucial data structure in the
+tidyverse. You learned about their key characteristics, how to create
+tibbles, and basic operations to explore and manipulate tibble data. In
+the next sections, we will dive deeper into data manipulation using
+tibbles and other tidyverse tools.
+
+## Tidy Data
+
+In this section, we will explore the concept of "tidy data," which is a
+fundamental principle in data analysis. Tidy data is a structured format
+that simplifies data manipulation and analysis.
+
+### What is Tidy Data?
+
+Tidy data is a data organization standard that adheres to the following
+principles:
+
+1.  **Each Variable Forms a Column**: In a tidy dataset, each variable
+    is a column, making it easy to identify and work with individual
+    variables.
+
+2.  **Each Observation Forms a Row**: Each row represents a unique
+    observation or case, making it straightforward to compare and
+    analyze data points.
+
+3.  **Each Type of Observational Unit Forms a Table**: Different types
+    of data should be stored in separate tables or data frames, allowing
+    for efficient merging and analysis.
+
+### Tidy Data Example
+
+Let's consider a simple example to illustrate the concept of tidy data:
+
+Suppose we have data on the number of books read by individuals in
+different months: <!-- Add CSS styling for the table -->
+
+```{=html}
+<style>
+.custom-table {
+    width: 50%; /* Adjust the width as needed */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.custom-table th, .custom-table td {
+    text-align: center; /* Set the text alignment (center, left, right) */
+    padding: 8px; /* Add padding for better spacing */
+}
+
+.custom-table th {
+    background-color: #f2f2f2; /* Add a background color to table headers */
+}
+</style>
+```
+<!-- Define the table using standard Markdown -->
+
++---------+---------+----------+-------+
+| Person  | January | February | March |
++=========+=========+==========+=======+
+| Alice   | 5       | 4        | 6     |
++---------+---------+----------+-------+
+| Bob     | 3       | 5        | 4     |
++---------+---------+----------+-------+
+| Charlie | 4       | 4        | 5     |
++---------+---------+----------+-------+
+
+This data is not tidy because the month variable is scattered over three
+columns as is the variable of the number of books. To convert this data
+into a tidy format, we need to transform this dataset by making a
+`Month`variable and a `Books` variable, each with its own column. To do
+this we can use the `pivot_longer` function from the `tidyr` package.
+This transformation would result in a dataset where each row represents
+a single observation and each variable forms a column:
+
+<!-- Add CSS styling for the table -->
+
+```{=html}
+<style>
+.custom-table {
+    width: 50%; /* Adjust the width as needed */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.custom-table th, .custom-table td {
+    text-align: center; /* Set the text alignment (center, left, right) */
+    padding: 8px; /* Add padding for better spacing */
+}
+
+.custom-table th {
+    background-color: #f2f2f2; /* Add a background color to table headers */
+}
+</style>
+```
+<!-- Define the table using standard Markdown -->
+
+31b8e172-b470-440e-83d8-e6b185028602:dAB5AHAAZQA6AE8AQQBCAGwAQQBHAFkAQQBOAFEAQgBoAEEARABjAEEATgB3AEEAeQBBAEMAMABBAFoAQQBCAGsAQQBEAFkAQQBNAHcAQQB0AEEARABRAEEATgBnAEEAeQBBAEQASQBBAEwAUQBBADQAQQBEAFEAQQBZAGcAQgBtAEEAQwAwAEEAWQBRAEIAbQBBAEQARQBBAE8AUQBBADUAQQBEAFUAQQBZAFEAQQB4AEEARwBJAEEATQBnAEIAaQBBAEQAawBBAAoAcABvAHMAaQB0AGkAbwBuADoATgB3AEEAegBBAEQARQBBAE4AZwBBAD0ACgBwAHIAZQBmAGkAeAA6AAoAcwBvAHUAcgBjAGUAOgBQAEEAQgAwAEEARwBFAEEAWQBnAEIAcwBBAEcAVQBBAEkAQQBCAGoAQQBHAHcAQQBZAFEAQgB6AEEASABNAEEAUABRAEEAaQBBAEcATQBBAGQAUQBCAHoAQQBIAFEAQQBiAHcAQgB0AEEAQwAwAEEAZABBAEIAaABBAEcASQBBAGIAQQBCAGwAQQBDAEkAQQBQAGcAQQBLAEEAQwBBAEEASQBBAEEAOABBAEgAUQBBAGEAQQBCAGwAQQBHAEUAQQBaAEEAQQArAEEAQQBvAEEASQBBAEEAZwBBAEMAQQBBAEkAQQBBADgAQQBIAFEAQQBjAGcAQQArAEEAQQBvAEEASQBBAEEAZwBBAEMAQQBBAEkAQQBBAGcAQQBDAEEAQQBQAEEAQgAwAEEARwBnAEEAUABnAEIAUQBBAEcAVQBBAGMAZwBCAHoAQQBHADgAQQBiAGcAQQA4AEEAQwA4AEEAZABBAEIAbwBBAEQANABBAEMAZwBBAGcAQQBDAEEAQQBJAEEAQQBnAEEAQwBBAEEASQBBAEEAOABBAEgAUQBBAGEAQQBBACsAQQBFADAAQQBiAHcAQgB1AEEASABRAEEAYQBBAEEAOABBAEMAOABBAGQAQQBCAG8AQQBEADQAQQBDAGcAQQBnAEEAQwBBAEEASQBBAEEAZwBBAEMAQQBBAEkAQQBBADgAQQBIAFEAQQBhAEEAQQArAEEARQBJAEEAYgB3AEIAdgBBAEcAcwBBAGMAdwBBADgAQQBDADgAQQBkAEEAQgBvAEEARAA0AEEAQwBnAEEAZwBBAEMAQQBBAEkAQQBBAGcAQQBEAHcAQQBMAHcAQgAwAEEASABJAEEAUABnAEEASwBBAEMAQQBBAEkAQQBBADgAQQBDADgAQQBkAEEAQgBvAEEARwBVAEEAWQBRAEIAawBBAEQANABBAEMAZwBBAGcAQQBDAEEAQQBQAEEAQgAwAEEARwBJAEEAYgB3AEIAawBBAEgAawBBAFAAZwBBAEsAQQBDAEEAQQBJAEEAQQBnAEEAQwBBAEEAUABBAEIAMABBAEgASQBBAFAAZwBBAEsAQQBDAEEAQQBJAEEAQQBnAEEAQwBBAEEASQBBAEEAZwBBAEQAdwBBAGQAQQBCAGsAQQBEADQAQQBRAFEAQgBzAEEARwBrAEEAWQB3AEIAbABBAEQAdwBBAEwAdwBCADAAQQBHAFEAQQBQAGcAQQBLAEEAQwBBAEEASQBBAEEAZwBBAEMAQQBBAEkAQQBBAGcAQQBEAHcAQQBkAEEAQgBrAEEARAA0AEEAUwBnAEIAaABBAEcANABBAGQAUQBCAGgAQQBIAEkAQQBlAFEAQQA4AEEAQwA4AEEAZABBAEIAawBBAEQANABBAEMAZwBBAGcAQQBDAEEAQQBJAEEAQQBnAEEAQwBBAEEASQBBAEEAOABBAEgAUQBBAFoAQQBBACsAQQBEAFUAQQBQAEEAQQB2AEEASABRAEEAWgBBAEEAKwBBAEEAbwBBAEkAQQBBAGcAQQBDAEEAQQBJAEEAQQA4AEEAQwA4AEEAZABBAEIAeQBBAEQANABBAEMAZwBBAGcAQQBDAEEAQQBJAEEAQQBnAEEARAB3AEEAZABBAEIAeQBBAEQANABBAEMAZwBBAGcAQQBDAEEAQQBJAEEAQQBnAEEAQwBBAEEASQBBAEEAOABBAEgAUQBBAFoAQQBBACsAQQBFAEUAQQBiAEEAQgBwAEEARwBNAEEAWgBRAEEAOABBAEMAOABBAGQAQQBCAGsAQQBEADQAQQBDAGcAQQBnAEEAQwBBAEEASQBBAEEAZwBBAEMAQQBBAEkAQQBBADgAQQBIAFEAQQBaAEEAQQArAEEARQBZAEEAWgBRAEIAaQBBAEgASQBBAGQAUQBCAGgAQQBIAEkAQQBlAFEAQQA4AEEAQwA4AEEAZABBAEIAawBBAEQANABBAEMAZwBBAGcAQQBDAEEAQQBJAEEAQQBnAEEAQwBBAEEASQBBAEEAOABBAEgAUQBBAFoAQQBBACsAQQBEAFEAQQBQAEEAQQB2AEEASABRAEEAWgBBAEEAKwBBAEEAbwBBAEkAQQBBAGcAQQBDAEEAQQBJAEEAQQA4AEEAQwA4AEEAZABBAEIAeQBBAEQANABBAEMAZwBBAGcAQQBDAEEAQQBJAEEAQQBnAEEARAB3AEEAZABBAEIAeQBBAEQANABBAEMAZwBBAGcAQQBDAEEAQQBJAEEAQQBnAEEAQwBBAEEASQBBAEEAOABBAEgAUQBBAFoAQQBBACsAQQBFAEUAQQBiAEEAQgBwAEEARwBNAEEAWgBRAEEAOABBAEMAOABBAGQAQQBCAGsAQQBEADQAQQBDAGcAQQBnAEEAQwBBAEEASQBBAEEAZwBBAEMAQQBBAEkAQQBBADgAQQBIAFEAQQBaAEEAQQArAEEARQAwAEEAWQBRAEIAeQBBAEcATQBBAGEAQQBBADgAQQBDADgAQQBkAEEAQgBrAEEARAA0AEEAQwBnAEEAZwBBAEMAQQBBAEkAQQBBAGcAQQBDAEEAQQBJAEEAQQA4AEEASABRAEEAWgBBAEEAKwBBAEQAWQBBAFAAQQBBAHYAQQBIAFEAQQBaAEEAQQArAEEAQQBvAEEASQBBAEEAZwBBAEMAQQBBAEkAQQBBADgAQQBDADgAQQBkAEEAQgB5AEEARAA0AEEAQwBnAEEAZwBBAEMAQQBBAEkAQQBBAGcAQQBEAHcAQQBkAEEAQgB5AEEARAA0AEEAQwBnAEEAZwBBAEMAQQBBAEkAQQBBAGcAQQBDAEEAQQBJAEEAQQA4AEEASABRAEEAWgBBAEEAKwBBAEUASQBBAGIAdwBCAGkAQQBEAHcAQQBMAHcAQgAwAEEARwBRAEEAUABnAEEASwBBAEMAQQBBAEkAQQBBAGcAQQBDAEEAQQBJAEEAQQBnAEEARAB3AEEAZABBAEIAawBBAEQANABBAFMAZwBCAGgAQQBHADQAQQBkAFEAQgBoAEEASABJAEEAZQBRAEEAOABBAEMAOABBAGQAQQBCAGsAQQBEADQAQQBDAGcAQQBnAEEAQwBBAEEASQBBAEEAZwBBAEMAQQBBAEkAQQBBADgAQQBIAFEAQQBaAEEAQQArAEEARABNAEEAUABBAEEAdgBBAEgAUQBBAFoAQQBBACsAQQBBAG8AQQBJAEEAQQBnAEEAQwBBAEEASQBBAEEAOABBAEMAOABBAGQAQQBCAHkAQQBEADQAQQBDAGcAQQBnAEEAQwBBAEEASQBBAEEAZwBBAEQAdwBBAGQAQQBCAHkAQQBEADQAQQBDAGcAQQBnAEEAQwBBAEEASQBBAEEAZwBBAEMAQQBBAEkAQQBBADgAQQBIAFEAQQBaAEEAQQArAEEARQBJAEEAYgB3AEIAaQBBAEQAdwBBAEwAdwBCADAAQQBHAFEAQQBQAGcAQQBLAEEAQwBBAEEASQBBAEEAZwBBAEMAQQBBAEkAQQBBAGcAQQBEAHcAQQBkAEEAQgBrAEEARAA0AEEAUgBnAEIAbABBAEcASQBBAGMAZwBCADEAQQBHAEUAQQBjAGcAQgA1AEEARAB3AEEATAB3AEIAMABBAEcAUQBBAFAAZwBBAEsAQQBDAEEAQQBJAEEAQQBnAEEAQwBBAEEASQBBAEEAZwBBAEQAdwBBAGQAQQBCAGsAQQBEADQAQQBOAFEAQQA4AEEAQwA4AEEAZABBAEIAawBBAEQANABBAEMAZwBBAGcAQQBDAEEAQQBJAEEAQQBnAEEARAB3AEEATAB3AEIAMABBAEgASQBBAFAAZwBBAEsAQQBDAEEAQQBJAEEAQQBnAEEAQwBBAEEAUABBAEIAMABBAEgASQBBAFAAZwBBAEsAQQBDAEEAQQBJAEEAQQBnAEEAQwBBAEEASQBBAEEAZwBBAEQAdwBBAGQAQQBCAGsAQQBEADQAQQBRAGcAQgB2AEEARwBJAEEAUABBAEEAdgBBAEgAUQBBAFoAQQBBACsAQQBBAG8AQQBJAEEAQQBnAEEAQwBBAEEASQBBAEEAZwBBAEMAQQBBAFAAQQBCADAAQQBHAFEAQQBQAGcAQgBOAEEARwBFAEEAYwBnAEIAagBBAEcAZwBBAFAAQQBBAHYAQQBIAFEAQQBaAEEAQQArAEEAQQBvAEEASQBBAEEAZwBBAEMAQQBBAEkAQQBBAGcAQQBDAEEAQQBQAEEAQgAwAEEARwBRAEEAUABnAEEAMABBAEQAdwBBAEwAdwBCADAAQQBHAFEAQQBQAGcAQQBLAEEAQwBBAEEASQBBAEEAZwBBAEMAQQBBAFAAQQBBAHYAQQBIAFEAQQBjAGcAQQArAEEAQQBvAEEASQBBAEEAZwBBAEMAQQBBAEkAQQBBADgAQQBIAFEAQQBjAGcAQQArAEEAQQBvAEEASQBBAEEAZwBBAEMAQQBBAEkAQQBBAGcAQQBDAEEAQQBQAEEAQgAwAEEARwBRAEEAUABnAEIARABBAEcAZwBBAFkAUQBCAHkAQQBHAHcAQQBhAFEAQgBsAEEARAB3AEEATAB3AEIAMABBAEcAUQBBAFAAZwBBAEsAQQBDAEEAQQBJAEEAQQBnAEEAQwBBAEEASQBBAEEAZwBBAEQAdwBBAGQAQQBCAGsAQQBEADQAQQBTAGcAQgBoAEEARwA0AEEAZABRAEIAaABBAEgASQBBAGUAUQBBADgAQQBDADgAQQBkAEEAQgBrAEEARAA0AEEAQwBnAEEAZwBBAEMAQQBBAEkAQQBBAGcAQQBDAEEAQQBJAEEAQQA4AEEASABRAEEAWgBBAEEAKwBBAEQAUQBBAFAAQQBBAHYAQQBIAFEAQQBaAEEAQQArAEEAQQBvAEEASQBBAEEAZwBBAEMAQQBBAEkAQQBBADgAQQBDADgAQQBkAEEAQgB5AEEARAA0AEEAQwBnAEEAZwBBAEMAQQBBAEkAQQBBAGcAQQBEAHcAQQBkAEEAQgB5AEEARAA0AEEAQwBnAEEAZwBBAEMAQQBBAEkAQQBBAGcAQQBDAEEAQQBJAEEAQQA4AEEASABRAEEAWgBBAEEAKwBBAEUATQBBAGEAQQBCAGgAQQBIAEkAQQBiAEEAQgBwAEEARwBVAEEAUABBAEEAdgBBAEgAUQBBAFoAQQBBACsAQQBBAG8AQQBJAEEAQQBnAEEAQwBBAEEASQBBAEEAZwBBAEMAQQBBAFAAQQBCADAAQQBHAFEAQQBQAGcAQgBHAEEARwBVAEEAWQBnAEIAeQBBAEgAVQBBAFkAUQBCAHkAQQBIAGsAQQBQAEEAQQB2AEEASABRAEEAWgBBAEEAKwBBAEEAbwBBAEkAQQBBAGcAQQBDAEEAQQBJAEEAQQBnAEEAQwBBAEEAUABBAEIAMABBAEcAUQBBAFAAZwBBADAAQQBEAHcAQQBMAHcAQgAwAEEARwBRAEEAUABnAEEASwBBAEMAQQBBAEkAQQBBAGcAQQBDAEEAQQBQAEEAQQB2AEEASABRAEEAYwBnAEEAKwBBAEEAbwBBAEkAQQBBAGcAQQBDAEEAQQBJAEEAQQA4AEEASABRAEEAYwBnAEEAKwBBAEEAbwBBAEkAQQBBAGcAQQBDAEEAQQBJAEEAQQBnAEEAQwBBAEEAUABBAEIAMABBAEcAUQBBAFAAZwBCAEQAQQBHAGcAQQBZAFEAQgB5AEEARwB3AEEAYQBRAEIAbABBAEQAdwBBAEwAdwBCADAAQQBHAFEAQQBQAGcAQQBLAEEAQwBBAEEASQBBAEEAZwBBAEMAQQBBAEkAQQBBAGcAQQBEAHcAQQBkAEEAQgBrAEEARAA0AEEAVABRAEIAaABBAEgASQBBAFkAdwBCAG8AQQBEAHcAQQBMAHcAQgAwAEEARwBRAEEAUABnAEEASwBBAEMAQQBBAEkAQQBBAGcAQQBDAEEAQQBJAEEAQQBnAEEARAB3AEEAZABBAEIAawBBAEQANABBAE4AUQBBADgAQQBDADgAQQBkAEEAQgBrAEEARAA0AEEAQwBnAEEAZwBBAEMAQQBBAEkAQQBBAGcAQQBEAHcAQQBMAHcAQgAwAEEASABJAEEAUABnAEEASwBBAEMAQQBBAEkAQQBBADgAQQBDADgAQQBkAEEAQgBpAEEARwA4AEEAWgBBAEIANQBBAEQANABBAEMAZwBBADgAQQBDADgAQQBkAEEAQgBoAEEARwBJAEEAYgBBAEIAbABBAEQANABBAAoAcwB1AGYAZgBpAHgAOgA=:31b8e172-b470-440e-83d8-e6b185028602
+\### Benefits of Tidy Data
+
+Tidy data offers several advantages:
+
+-   It simplifies data manipulation, as you can use consistent tools and
+    techniques to work with data.
+-   It makes it easier to visualize data and identify patterns using
+    data visualization libraries like `ggplot2`.
+-   Tidy data is compatible with most statistical and machine learning
+    models, streamlining the modeling process.
+-   Collaboration and sharing become more straightforward when data
+    follows tidy principles, as others can easily understand and work
+    with the data.
+
+### Common Tidying Operations
+
+In the next sections, we will explore common tidying operations,
+including `pivot_longer`, `pivot_wider`, and other techniques that help
+transform messy data into tidy data.
+
+Let's start by diving into `pivot_longer` in the next section.
+
+Are you ready to explore tidying data with `tidyr`? Let's get started!
+
+### Exercise: Tidy or Not?
+
+**Objective:** Determine whether the given dataset is in a tidy format
+or not.
+
+**Instructions:**
+
+Examine the following dataset:
+
+<!-- Add CSS styling for the table -->
+
+```{=html}
+<style>
+.custom-table {
+    width: 50%; /* Adjust the width as needed */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.custom-table th, .custom-table td {
+    text-align: center; /* Set the text alignment (center, left, right) */
+    padding: 8px; /* Add padding for better spacing */
+}
+
+.custom-table th {
+    background-color: #f2f2f2; /* Add a background color to table headers */
+}
+</style>
+```
+<!-- Define the table using standard Markdown -->
+
++---------+--------+--------+--------+
+| Student | Exam 1 | Exam 2 | Exam 3 |
++=========+========+========+========+
+| Alice   | 85     | 90     | 88     |
++---------+--------+--------+--------+
+| Bob     | 78     | 82     | 80     |
++---------+--------+--------+--------+
+| Charlie | 92     | 88     | 94     |
++---------+--------+--------+--------+
+
+Decide if this dataset adheres to the principles of tidy data. Explain
+your reasoning.
+
+::: {#tidy1-hint}
+**Hint:** Consider the principles of tidy data: Each variable should
+form a column, each observation should form a row, and each type of
+observational unit should form a separate table.
+:::
+
+::: {#tidy1-solution}
+**Solution:** This dataset is not in a tidy format. Here's the
+reasoning:
+
+-   Each row represents a student, which is a unique observation.
+-   Each column represents an exam, which is a variable.
+-   Therefore, it follows the principles of tidy data.
+:::
+
+### Exercise: Identifying Tidy Variables
+
+**Objective:** Identify variables that are in a tidy format from a given
+dataset.
+
+**Instructions:**
+
+Examine the following dataset: <!-- Add CSS styling for the table -->
+
+```{=html}
+<style>
+.custom-table {
+    width: 50%; /* Adjust the width as needed */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.custom-table th, .custom-table td {
+    text-align: center; /* Set the text alignment (center, left, right) */
+    padding: 8px; /* Add padding for better spacing */
+}
+
+.custom-table th {
+    background-color: #f2f2f2; /* Add a background color to table headers */
+}
+</style>
+```
+<!-- Define the table using standard Markdown -->
+
++---------+---------------+----------------+-------------+
+| Product | Price_January | Price_February | Price_March |
++=========+===============+================+=============+
+| A       | 10.5          | 11.2           | 11.8        |
++---------+---------------+----------------+-------------+
+| B       | 8.3           | 8.9            | 9.2         |
++---------+---------------+----------------+-------------+
+| C       | 12.0          | 12.5           | 12.9        |
++---------+---------------+----------------+-------------+
+
+Determine which variables in this dataset follow the principles of tidy
+data. Provide a list of tidy variables and explain your reasoning.
+
+::: {#tidy2-hint}
+**Hint:** Consider the principles of tidy data and look for variables
+that are in a suitable format for analysis.
+:::
+
+::: {#tidy2-solution}
+**Solution:** In this dataset, the tidy variables are `Product`,
+`Month`, and `Price`. Here's the reasoning:
+
+`Product` is a variable that forms a column, and each value represents a
+different type of product, which is an observational unit. `Month` is
+also a variable that forms a column, and each value represents a
+different time period (January, February, March). `Price` is the
+observed value associated with each product in each month, forming the
+data to be analyzed. This variable follows the tidy data principles as
+well.
+:::
+
+
+
+## Transforming Rows
+
+In this section, we will dive into techniques for basic data
+transformation of rows of data. Remember that in tidy data, every row is
+an observation of the data source. Typically, we transform rows of a
+dataset (tibble) by filtering and arranging according to your analysis
+needs
+
+### Installing and Loading the Tidyverse Package
+
+Before we start, let's ensure you have the tidyverse package installed
+and loaded. If you haven't already installed it, run the following code:
+
+```{r install_tidyverse}
+# Install tidyverse (if not already installed)
+if (!requireNamespace("tidyverse", quietly = TRUE)) {
+  install.packages("tidyverse")
+}
+```
+
+Now, load the package:
+
+```{r load_tidyverse}
+# Load the tidyverse package
+library(tidyverse)
+```
+
+### Importing Data into R
+
+To demonstrate data transformation, we need some data. In this tutorial,
+we'll generate a sample dataset of student scores called `student_data`.
+It contains scores from math and literature classes.
+
+Let's generate the `student_data` dataset:
+
+```{r studata}
+# Create a sample dataset for demonstration
+(student_data <- tibble(
+  Student = c("Abbie", "Billy", "Clara", "Danielle", "Edgar"),
+  Math_Score = c(85, 92, 78, 95, 88),
+  Literature_Score = c(88, 90, 75, 92, 86)
+))
+```
+
+Generating the dataset means that it is loaded for us. Usually you will
+need to import a dataset for your analytics.
+
+### Filtering Rows with `filter()`
+
+Here we will explore how to filter rows in your data using the
+`filter()` function in Tidyverse. Think of this function as a verb that
+allows you to select specific rows based on certain conditions.
+
+#### Filtering Rows with Single Conditions
+
+The `filter()` function is a powerful tool for selecting rows that meet
+specific conditions. Let's start with simple examples using single
+conditions.
+
+##### Inequalities
+
+Suppose we have a dataset of students' exam scores. To filter and select
+students who scored **greater than** 90 in Math:
+```{r filter1}
+# Filter students with Math scores above 90
+(high_math_scores <- student_data |>
+  filter(Math_Score > 90))
+```
+
+Here, `Math_Score > 90` is a single condition that selects rows where
+the `Math_Score` is greater than 90.
+
+Ready to practice filtering rows using `filter()`? Try this exercise to
+reinforce your knowledge!
+
+##### **Exercise:** Filtering by Math Score
+
+**Objective:** Filter students who scored below 80 in Math.
+
+**Instructions:** Use the `filter()` function to create a new dataset,
+`low_math_scores`, that includes students with Math scores less than 80.
+```{r filter_low, exercise=TRUE, exercise.eval=TRUE}
+
+```
+
+```{r filter_low-hint}
+# Filter students with Math scores below 80
+(low_math_scores <- student_data %>%
+  filter(Math_Score < 80))
+```
+
+
+##### Equalities
+
+We can also filter data to get a specific value rather than greater than
+or less than. For example, to filter and select students whose score
+**equal** exactly 90 in their literature class:
+
+```{r echo=T}
+# Filter students with Math scores above 90
+(lit_scores_90 <- student_data |>
+  filter(Literature_Score == 90))
+```
+
+Here, `Literature_Score == 90` is a single condition that selects rows
+where the `Literature_Score` is equal to 90. Notice that the equality
+condition is specified with `==` rather than `=`. More on this soon.
+
+##### Character Strings
+
+When we want to filter on a condition in a character variable, we simply
+need to set the condition equal to a character string in quotes. For
+example, to filter and select Edgar's scores: We can also filter data to
+get a specific value rather than greater than or less than. For example,
+to filter and select students whose score **equal** exactly 90 in their
+literature class:
+
+```{r echo=T}
+# Filter students with Math scores above 90
+(Edgar_scores <- student_data |>
+  filter(Student == "Edgar"))
+```
+
+Here, `Student == "Edgar"` is a single condition that selects rows where
+the student name is Edgar. Notice that once again the equality condition
+is specified with `==` rather than `=`.
+
+#### Filtering Rows with Multiple (Boolean) Conditions
+
+You can also use boolean conditions to filter rows based on multiple
+criteria. Boolean conditions, named after mathematician and logician
+George Boole, are expressions or statements in programming that evaluate
+to either true or false, representing logical values or states. More
+specifically boolean conditions use logical operators such as & (AND),
+\| (OR), and ! (NOT).
+
+Suppose we want to filter students who scored above 90 in both Math and
+Literature:
+
+```{r echo=T}
+# Filter students with scores above 90 in both Math and Literature
+(high_scores_both <- student_data |>
+  filter(Math_Score > 90 & Literature_Score > 90))
+```
+
+In this case, the condition `Math_Score > 90 & English_Score > 90` is a
+boolean condition that selects rows where the Math score and the
+Literature simultaneously meet the conditions.
+
+#### Exercise 3: Filtering by Math and Literature Scores
+__Objective:__ Filter students who scored above 90 in both Math and Literature.
+
+__Instructions:__ Use the `filter()` function to create a new dataset, `high_scores_both`, that includes students with Math scores greater than 90 and Literature scores less than 90.
+```{r filter_math_lit, exercise=TRUE, exercise.eval=TRUE}
+
+```
+
+```{r filter_math_lit-hint}
+# Filter students with scores above 90 in both Math and below 90 in Literature
+high_scores_both <- student_data %>%
+  filter(Math_Score > 90 & Literature_Score < 90)
+```
+
+  
+  
+#### Filtering with the %in% Operator
+
+The `%in%` operator is useful for filtering rows based on values within
+a specified set or vector. As you probably expect, it is a condition
+that selects when a condition is found **in** the data.
+
+Suppose we have a dataset of customer orders, and we want to filter
+orders from specific cities. First we need to generate this sample data:
+
+```{r echo=T}
+# Create a sample dataset for %in% demonstration
+(orders_data <- tibble(
+  Customer_ID = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
+  Order_ID = c(101, 102, 103, 104, 105, 106, 107, 108, 109, 110),
+  Order_Quantity = c(5, 3, 7, 2, 6, 4, 8, 1, 9, 5),
+  Date = as.Date(c("2023-01-10", "2023-02-15", "2023-03-20", "2023-04-25", "2023-05-30", 
+                    "2023-06-05", "2023-07-10", "2023-08-15", "2023-09-20", "2023-10-25")),
+  City = c("New York", "Los Angeles", "Boston", "Seattle", "Chicago", "San Francisco", 
+    "Miami", "Denver", "Austin", "Atlanta")
+))
+```
+
+Now let's filter on the orders in New York, Chicago, and Los Angeles:
+
+```{r echo=T}
+# Filter orders from selected cities
+selected_cities <- c("New York", "Chicago", "Los Angeles")
+(filtered_orders <- orders_data %>%
+  filter(City %in% selected_cities))
+```
+
+Here, `City %in% selected_cities` checks if the `City` values match any
+of the selected cities in the vector named `selected_cities`.
+
+#### Exercise: Filtering by Product Category
+__Objective:__ Filter products from specific product categories.
+
+__Instructions:__ Use the `filter()` function to create a new dataset, `selected_products`, that includes products from the categories "Electronics," "Clothing," and "Books."
+
+_Dataset:_ Here's a sample dataset of products with product IDs and categories for use in this exercise:
+```{r product_data}
+# Sample dataset of products
+(product_data <- tibble(
+  Product_ID = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
+  Product_Name = c("Laptop", "T-shirt", "Headphones", "Jeans", "Tablet",
+                    "Dress", "Smartphone", "Sneakers", "Book", "Camera"),
+  Category = c("Electronics", "Clothing", "Electronics", "Clothing", "Electronics",
+               "Clothing", "Electronics", "Clothing", "Books", "Electronics")
+  )
+ )
+```
+
+```{r filter_in, exercise=TRUE, exercise.eval=TRUE}
+
+```
+
+```{r filter_in-hint}
+# Select products from specific categories
+selected_categories <- c("Electronics", "Clothing", "Books")
+selected_products <- product_data %>%
+  filter(Category %in% selected_categories)
+```
+
+#### Distinction Between `=` and `==`
+
+In R, `=` is used for assignment, while `==` is used for equality
+comparison. When filtering rows based on values, always use `==`. For
+example:
+
+```{r}
+# Correct: Filter rows where order quantity is equal to 103
+filtered_data <- orders_data %>%
+  filter(Order_Quantity == 103)
+
+# Incorrect: Avoid using = for comparison. (This code will generate an error)
+#filtered_data <- data %>%
+#  filter(Age = 30) # This would make sense if age was being set to 30 but not in this comparison whether Age = 30
+```
+
+In this section, we've explored the filter() function in Tidyverse,
+emphasizing its role as a verb that selects rows based on conditions. We
+covered single conditions, boolean conditions, the %in% operator for set
+matching, and the distinction between = and ==. Filtering is a
+fundamental data wrangling skill that helps you extract meaningful
+information from your datasets.
+
+
